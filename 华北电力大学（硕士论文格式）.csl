@@ -21,7 +21,7 @@
     </author>
     <category citation-format="numeric"/>
     <category field="generic-base"/>
-    <summary>华北电力大学硕士论文参考文献：论文集单篇题名[A]、论文集名[C]且不使用“//”；作者为空时兜底；避免 et al. 与中文句号叠加；参考文献悬挂缩进。</summary>
+    <summary>华北电力大学硕士论文参考文献：论文集单篇题名[A]、论文集名[C]且不使用“//”；作者为空时兜底；避免 et al. 与中文句号叠加；参考文献悬挂缩进且不使用 second-field-align 产生制表符。</summary>
     <updated>2025-12-19T23:59:59+08:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">
       This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License
@@ -35,7 +35,7 @@
       <term name="close-quote">”</term>
       <term name="open-inner-quote">‘</term>
       <term name="close-inner-quote">’</term>
-      <term name="et-al">等</term>
+      <!-- 注意：不要强行定义 et-al=等，否则英文也会变“等” -->
     </terms>
   </locale>
 
@@ -50,8 +50,6 @@
       <term name="page-range-delimiter">-</term>
     </terms>
   </locale>
-
-  <!-- ================= 基础宏：作者（带兜底） ================= -->
 
   <!-- 主要责任者：author 为空时兜底到 editor / translator / container-author 等 -->
   <macro name="author">
@@ -87,15 +85,13 @@
     </names>
   </macro>
 
-  <!-- 作者 + 中文句号：注意这里不靠外层 delimiter 补点，从根本消灭 et al.． -->
+  <!-- 作者 + 中文句号（避免 et al. 后叠加中文句号） -->
   <macro name="author-with-dot">
     <group>
       <text macro="author"/>
       <text value="．"/>
     </group>
   </macro>
-
-  <!-- ================= 题名与标识 ================= -->
 
   <!-- 文献类型标识 -->
   <macro name="type-id">
@@ -237,8 +233,6 @@
     </group>
   </macro>
 
-  <!-- ================= 出处、出版项 ================= -->
-
   <!-- 出版年 -->
   <macro name="issued-year">
     <choose>
@@ -320,7 +314,7 @@
     </names>
   </macro>
 
-  <!-- 主编（仅当 editor 存在时才会被调用） -->
+  <!-- 主编 -->
   <macro name="container-contributors">
     <names variable="editor" delimiter="，" et-al-min="4" et-al-use-first="3">
       <name/>
@@ -338,7 +332,7 @@
     </names>
   </macro>
 
-  <!-- 出版项（沿用模板逻辑） -->
+  <!-- 出版项 -->
   <macro name="publisher">
     <choose>
       <if type="patent">
@@ -387,7 +381,7 @@
     </choose>
   </macro>
 
-  <!-- 电子文献 URL（按你模板：仅纯电子显示 URL） -->
+  <!-- 电子文献 URL -->
   <macro name="access">
     <choose>
       <if type="dataset post post-weblog software webpage" match="any">
@@ -396,11 +390,7 @@
     </choose>
   </macro>
 
-  <!-- ================= 科技成果奖（按你7项） ================= -->
-  <!-- 你在 Zotero 里把它录为 report，且 author 为空，并填齐这7项字段：
-       title=项目名称；publisher=颁奖单位；genre=获奖类别；edition=奖励等级；
-       number=获奖者排名；issued=获奖年月；call-number=证书号
-  -->
+  <!-- 科技成果奖：年月中文 -->
   <macro name="award-year-month-cn">
     <date variable="issued">
       <date-part name="year" suffix="年"/>
@@ -420,11 +410,10 @@
     </group>
   </macro>
 
-  <!-- ================= 参考文献条目主布局 ================= -->
+  <!-- 条目布局 -->
   <macro name="entry-layout">
     <choose>
-
-      <!-- 科技成果奖分支 -->
+      <!-- 科技成果奖 -->
       <if type="report" match="all">
         <choose>
           <if variable="author" match="none">
@@ -457,11 +446,9 @@
         </choose>
       </if>
 
-      <!-- 其他常规文献 -->
+      <!-- 常规 -->
       <else>
         <choose>
-
-          <!-- 连续出版物（期刊/报纸等） -->
           <if type="article-journal article-magazine article-newspaper" match="any">
             <group>
               <text macro="author-with-dot"/>
@@ -470,7 +457,6 @@
             </group>
           </if>
 
-          <!-- 专利 -->
           <else-if type="patent">
             <group>
               <text macro="author-with-dot"/>
@@ -479,7 +465,6 @@
             </group>
           </else-if>
 
-          <!-- 电子资源 -->
           <else-if type="dataset post post-weblog software webpage" match="any">
             <group>
               <text macro="author-with-dot"/>
@@ -489,7 +474,6 @@
             </group>
           </else-if>
 
-          <!-- 论文集单篇论文：题名[A]．(有主编才输出)．论文集名[C]．出版项 -->
           <else-if type="paper-conference" variable="container-title" match="any">
             <group>
               <text macro="author-with-dot"/>
@@ -504,7 +488,6 @@
             </group>
           </else-if>
 
-          <!-- 其余：专著/章节/学位论文/报告等 -->
           <else>
             <group>
               <text macro="author-with-dot"/>
@@ -515,14 +498,10 @@
               <text macro="access"/>
             </group>
           </else>
-
         </choose>
       </else>
-
     </choose>
   </macro>
-
-  <!-- ================= 引文与参考文献 ================= -->
 
   <citation collapse="citation-number" after-collapse-delimiter=",">
     <sort>
@@ -533,9 +512,8 @@
     </layout>
   </citation>
 
-  <!-- 悬挂缩进 + 第二字段对齐 + 序号后空格 -->
-  <bibliography entry-spacing="0" et-al-min="4" et-al-use-first="3"
-    second-field-align="flush" hanging-indent="true">
+  <!-- 关键：去掉 second-field-align="flush" 才不会自动插入制表符 -->
+  <bibliography entry-spacing="0" et-al-min="4" et-al-use-first="3" hanging-indent="true">
     <layout>
       <text variable="citation-number" prefix="[" suffix="]"/>
       <text value=" "/>
