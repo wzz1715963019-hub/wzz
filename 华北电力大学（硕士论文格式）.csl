@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<style xmlns="http://purl.org/net/xbiblio/csl"
-  class="in-text"
-  version="1.0"
-  name-as-sort-order="all"
-  sort-separator=" "
-  demote-non-dropping-particle="never"
-  initialize-with=" "
-  initialize-with-hyphen="false"
-  page-range-format="expanded"
+<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0"
+  name-as-sort-order="all" sort-separator=" " demote-non-dropping-particle="never"
+  initialize-with=" " initialize-with-hyphen="false" page-range-format="expanded"
   default-locale="zh-CN">
 
   <info>
-    <title>华北电力大学硕士论文（顺序编码）</title>
-    <id>https://zotero-chinese.com/styles/ncepu-thesis-numeric-modified</id>
+    <title>华北电力大学（硕士论文格式）</title>
+    <id>https://zotero-chinese.com/styles/ncepu-master-thesis-numeric</id>
+    <link href="https://zotero-chinese.com/styles/ncepu-master-thesis-numeric" rel="self"/>
     <link href="https://zotero-chinese.com/styles/GB-T-7714—2015（顺序编码，双语，姓名不大写，无URL、DOI）" rel="template"/>
     <author>
       <name>Zeping Lee</name>
@@ -20,11 +15,9 @@
     </author>
     <category citation-format="numeric"/>
     <category field="generic-base"/>
-    <summary>华北电力大学硕士论文：序号全角［］；作者<=3全列，>3前3+等/et al；论文集单篇：题名[A].主编.论文集名[C]；科技成果奖：按7项输出且不加类型标识；纯电子文献URL后标注[检索时间]；文后不加结束符。</summary>
+    <summary>按学校示例：论文集单篇题名[A]、论文集名[C]且不使用“//”；科技成果奖按7项输出且不加类型标识；序号使用全角［］；纯电子文献URL后标注[检索时间]；文后条目不加结束符。</summary>
     <updated>2025-12-19T00:00:00+08:00</updated>
-    <rights license="http://creativecommons.org/licenses/by-sa/3.0/">
-      This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License
-    </rights>
+    <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
 
   <locale xml:lang="zh">
@@ -50,7 +43,7 @@
     </terms>
   </locale>
 
-  <!-- 作者：<=3全列；>3前3+等；分隔符中文逗号 -->
+  <!-- 主要责任者：<=3全列；>3前三+等 -->
   <macro name="author">
     <names variable="author" delimiter="，" et-al-min="4" et-al-use-first="3">
       <name/>
@@ -68,7 +61,73 @@
     </names>
   </macro>
 
-  <!-- 文献类型标识（按你们表1/表2/表3，科技成果奖不走这里） -->
+  <!-- 题名（通用）：题名 + [类型/载体] -->
+  <macro name="title">
+    <group delimiter=": ">
+      <text variable="title"/>
+      <group delimiter="&#8195;">
+        <choose>
+          <if variable="container-title" type="chapter entry-dictionary entry-encyclopedia paper-conference" match="none">
+            <text macro="volume"/>
+            <text variable="volume-title"/>
+          </if>
+        </choose>
+        <choose>
+          <if type="article article-journal" match="none">
+            <text variable="number"/>
+          </if>
+        </choose>
+        <choose>
+          <if type="collection manuscript personal_communication" match="any">
+            <text variable="archive_location"/>
+          </if>
+        </choose>
+      </group>
+    </group>
+    <group delimiter="/" prefix="[" suffix="]">
+      <text macro="type-id"/>
+      <text macro="medium-id"/>
+    </group>
+  </macro>
+
+  <!-- 论文集单篇题名：强制 [A]（满足：题名后[A]） -->
+  <macro name="title-A">
+    <group delimiter=": ">
+      <text variable="title"/>
+      <group delimiter="&#8195;">
+        <choose>
+          <if type="article article-journal" match="none">
+            <text variable="number"/>
+          </if>
+        </choose>
+      </group>
+    </group>
+    <group delimiter="/" prefix="[" suffix="]">
+      <text value="A"/>
+      <text macro="medium-id"/>
+    </group>
+  </macro>
+
+  <!-- 书籍卷号 -->
+  <macro name="volume">
+    <choose>
+      <if type="article article-journal article-magazine article-newspaper periodical" match="none">
+        <choose>
+          <if is-numeric="volume">
+            <group delimiter=" ">
+              <label variable="volume" form="short" text-case="capitalize-first"/>
+              <text variable="volume"/>
+            </group>
+          </if>
+          <else>
+            <text variable="volume"/>
+          </else>
+        </choose>
+      </if>
+    </choose>
+  </macro>
+
+  <!-- 文献类型标识 -->
   <macro name="type-id">
     <choose>
       <if type="article bill collection hearing legal_case legislation personal_communication regulation treaty" match="any">
@@ -116,7 +175,7 @@
     </choose>
   </macro>
 
-  <!-- 载体标识：仅纯电子资源显示OL（你原逻辑保留） -->
+  <!-- 载体标识 -->
   <macro name="medium-id">
     <choose>
       <if type="dataset post post-weblog software webpage" match="any">
@@ -132,73 +191,7 @@
     </choose>
   </macro>
 
-  <!-- 卷号 -->
-  <macro name="volume">
-    <choose>
-      <if type="article article-journal article-magazine article-newspaper periodical" match="none">
-        <choose>
-          <if is-numeric="volume">
-            <group delimiter=" ">
-              <label variable="volume" form="short" text-case="capitalize-first"/>
-              <text variable="volume"/>
-            </group>
-          </if>
-          <else>
-            <text variable="volume"/>
-          </else>
-        </choose>
-      </if>
-    </choose>
-  </macro>
-
-  <!-- 通用题名：题名 + [类型/载体] -->
-  <macro name="title">
-    <group delimiter=": ">
-      <text variable="title"/>
-      <group delimiter="&#8195;">
-        <choose>
-          <if variable="container-title" type="chapter entry-dictionary entry-encyclopedia paper-conference" match="none">
-            <text macro="volume"/>
-            <text variable="volume-title"/>
-          </if>
-        </choose>
-        <choose>
-          <if type="article article-journal" match="none">
-            <text variable="number"/>
-          </if>
-        </choose>
-        <choose>
-          <if type="collection manuscript personal_communication" match="any">
-            <text variable="archive_location"/>
-          </if>
-        </choose>
-      </group>
-    </group>
-    <group delimiter="/" prefix="[" suffix="]">
-      <text macro="type-id"/>
-      <text macro="medium-id"/>
-    </group>
-  </macro>
-
-  <!-- 论文集单篇题名：强制 [A]，并按示例在后面加英文句点 . -->
-  <macro name="title-A">
-    <group delimiter=": ">
-      <text variable="title"/>
-      <group delimiter="&#8195;">
-        <choose>
-          <if type="article article-journal" match="none">
-            <text variable="number"/>
-          </if>
-        </choose>
-      </group>
-    </group>
-    <group delimiter="/" prefix="[" suffix="]">
-      <text value="A"/>
-      <text macro="medium-id"/>
-    </group>
-  </macro>
-
-  <!-- 译者 -->
+  <!-- 其他责任者 -->
   <macro name="secondary-contributors">
     <names variable="translator" delimiter="，" et-al-min="4" et-al-use-first="3">
       <name/>
@@ -219,7 +212,7 @@
     </names>
   </macro>
 
-  <!-- 论文集名 + [C]（按你示例：论文集名[C]） -->
+  <!-- 论文集名[C]（满足：论文集名[C]） -->
   <macro name="container-proceedings-title">
     <text variable="container-title"/>
     <group prefix="[" suffix="]">
@@ -227,7 +220,7 @@
     </group>
   </macro>
 
-  <!-- 连续出版物出处 -->
+  <!-- 连续出版物出处项 -->
   <macro name="container-periodical">
     <choose>
       <if type="article-newspaper">
@@ -260,7 +253,7 @@
     </choose>
   </macro>
 
-  <!-- 版本 -->
+  <!-- 版本项 -->
   <macro name="edition">
     <choose>
       <if is-numeric="edition">
@@ -272,43 +265,6 @@
       <else>
         <text variable="edition"/>
       </else>
-    </choose>
-  </macro>
-
-  <!-- 出版年 -->
-  <macro name="issued-year">
-    <choose>
-      <if variable="issued">
-        <choose>
-          <if is-uncertain-date="issued">
-            <date variable="issued" form="numeric" date-parts="year" prefix="[" suffix="]"/>
-          </if>
-          <else>
-            <date variable="issued" form="numeric" date-parts="year"/>
-          </else>
-        </choose>
-      </if>
-      <else>
-        <date variable="accessed" form="numeric" date-parts="year" prefix="[" suffix="]"/>
-      </else>
-    </choose>
-  </macro>
-
-  <!-- 出版日期 -->
-  <macro name="issued-date">
-    <date variable="issued" form="numeric"/>
-  </macro>
-
-  <!-- 检索日期（URL存在才显示） -->
-  <macro name="accessed-date">
-    <choose>
-      <if type="dataset post post-weblog software webpage" match="any">
-        <choose>
-          <if variable="URL">
-            <date variable="accessed" form="numeric" prefix="[" suffix="]"/>
-          </if>
-        </choose>
-      </if>
     </choose>
   </macro>
 
@@ -361,7 +317,44 @@
     </choose>
   </macro>
 
-  <!-- URL + [检索日期]（放URL后） -->
+  <!-- 出版年 -->
+  <macro name="issued-year">
+    <choose>
+      <if variable="issued">
+        <choose>
+          <if is-uncertain-date="issued">
+            <date variable="issued" form="numeric" date-parts="year" prefix="[" suffix="]"/>
+          </if>
+          <else>
+            <date variable="issued" form="numeric" date-parts="year"/>
+          </else>
+        </choose>
+      </if>
+      <else>
+        <date variable="accessed" form="numeric" date-parts="year" prefix="[" suffix="]"/>
+      </else>
+    </choose>
+  </macro>
+
+  <!-- 出版日期 -->
+  <macro name="issued-date">
+    <date variable="issued" form="numeric"/>
+  </macro>
+
+  <!-- 引用日期 -->
+  <macro name="accessed-date">
+    <choose>
+      <if type="dataset post post-weblog software webpage" match="any">
+        <choose>
+          <if variable="URL">
+            <date variable="accessed" form="numeric" prefix="[" suffix="]"/>
+          </if>
+        </choose>
+      </if>
+    </choose>
+  </macro>
+
+  <!-- URL -->
   <macro name="access">
     <choose>
       <if type="dataset post post-weblog software webpage" match="any">
@@ -371,41 +364,43 @@
     </choose>
   </macro>
 
-  <!-- 科技成果奖（新增品种 award）：严格按你给的7项输出，不加任何 [X] 标识 -->
+  <!-- 科技成果奖：用 report + 字段组合“严格识别”，并按7项输出且不加类型标识
+       字段建议（Zotero里填写）：
+       title=项目名称；publisher=颁奖单位；genre=获奖类别；edition=奖励等级；
+       number=获奖者排名；issued=获奖年月；call-number=证书号
+  -->
   <macro name="award-layout">
     <group delimiter="． ">
-      <text variable="title"/>        <!-- 项目名称 -->
-      <text variable="publisher"/>    <!-- 颁奖单位 -->
-      <text variable="genre"/>        <!-- 获奖类别 -->
-      <text variable="edition"/>      <!-- 奖励等级 -->
-      <text variable="number"/>       <!-- 获奖者排名 -->
+      <text variable="title"/>
+      <text variable="publisher"/>
+      <text variable="genre"/>
+      <text variable="edition"/>
+      <text variable="number"/>
       <choose>
         <if variable="issued">
-          <date variable="issued" form="numeric" date-parts="year-month"/> <!-- 获奖年月 -->
+          <date variable="issued" form="numeric" date-parts="year-month"/>
         </if>
       </choose>
-      <text variable="call-number"/>  <!-- 证书号 -->
+      <text variable="call-number"/>
     </group>
   </macro>
 
-  <!-- 参考文献条目 -->
+  <!-- 参考文献表格式 -->
   <macro name="entry-layout">
     <group delimiter="． ">
-
       <choose>
-        <!-- 科技成果奖：不输出作者，不加类型标识，直接7项 -->
-        <if type="award">
+
+        <!-- 科技成果奖分支：必须是 report 且7项字段齐全才触发 -->
+        <if type="report" variable="title publisher genre edition number call-number issued" match="all">
           <text macro="award-layout"/>
         </if>
 
         <else>
-          <!-- 其余类型：先作者 -->
           <text macro="author"/>
-
           <choose>
-
             <if type="periodical">
               <text macro="title"/>
+              <text macro="year-volume-issue"/>
               <text macro="publisher"/>
             </if>
 
@@ -424,13 +419,11 @@
               <text macro="publisher"/>
             </else-if>
 
-            <!-- 论文集单篇论文：严格按示例，不用“//”
-                 ［序号］作者．题名[A].主编．论文集名[C]．出版地：出版社, 出版年：起止页码
-            -->
+            <!-- 论文集单篇：题名[A].主编．论文集名[C]．出版地：出版社, 出版年：起止页码（无“//”） -->
             <else-if type="paper-conference" variable="container-title" match="any">
               <text macro="title-A" suffix="."/>
-              <text macro="container-contributors"/>
-              <text macro="container-proceedings-title"/>
+              <text macro="container-contributors" suffix="．"/>
+              <text macro="container-proceedings-title" suffix="．"/>
               <text macro="publisher"/>
             </else-if>
 
@@ -457,12 +450,20 @@
             </else>
 
           </choose>
-
           <text macro="access"/>
         </else>
-      </choose>
 
+      </choose>
     </group>
+  </macro>
+
+  <!-- 连续出版物的年卷期（保持你原模板） -->
+  <macro name="year-volume-issue">
+    <group delimiter="， ">
+      <text macro="issued-year"/>
+      <text variable="volume"/>
+    </group>
+    <text variable="issue" prefix="(" suffix=")"/>
   </macro>
 
   <!-- 正文引文：全角［］上标 -->
@@ -475,7 +476,7 @@
     </layout>
   </citation>
 
-  <!-- 文后参考文献：序号全角［］；条目末尾不加结束符 -->
+  <!-- 文后：序号全角［］；不加结束符 -->
   <bibliography entry-spacing="0" et-al-min="4" et-al-use-first="3" second-field-align="flush">
     <layout>
       <text variable="citation-number" prefix="［" suffix="］"/>
