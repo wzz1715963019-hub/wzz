@@ -8,12 +8,12 @@
   initialize-with=" "
   initialize-with-hyphen="false"
   page-range-format="expanded"
-  default-locale="zh-CN">
+  default-locale="en">
 
   <info>
-    <title>华北电力大学（硕士论文格式）-v3（中英et-al分流）</title>
-    <id>https://zotero-chinese.com/styles/华北电力大学（硕士论文格式）-v3</id>
-    <link href="https://zotero-chinese.com/styles/华北电力大学（硕士论文格式）-v3" rel="self"/>
+    <title>华北电力大学（硕士论文格式）-v5（无语言默认英文）</title>
+    <id>https://zotero-chinese.com/styles/华北电力大学（硕士论文格式）-v5</id>
+    <link href="https://zotero-chinese.com/styles/华北电力大学（硕士论文格式）-v5" rel="self"/>
     <link href="https://zotero-chinese.com/styles/GB-T-7714—2015（顺序编码，双语，姓名不大写，无URL、DOI）" rel="template"/>
     <author>
       <name>Zeping Lee</name>
@@ -21,14 +21,14 @@
     </author>
     <category citation-format="numeric"/>
     <category field="generic-base"/>
-    <summary>华北电力大学硕士论文参考文献：论文集单篇题名[A] + 论文集名[C]；科技成果奖7项；作者兜底；中文条目“等．”，英文条目“et al.”且不双点；参考文献悬挂缩进且不插制表符。</summary>
+    <summary>华北电力大学硕士论文参考文献：无语言字段默认按英文处理(et al.)；仅 Language=zh 输出“等”；论文集单篇题名[A] + 论文集名[C]；科技成果奖7项；不使用制表符与 CSL 悬挂缩进。</summary>
     <updated>2025-12-19T23:59:59+08:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">
       This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License
     </rights>
   </info>
 
-  <!-- 中文：et-al = 等 -->
+  <!-- 中文：et-al = 等（仅当条目 Language=zh/zh-CN 时才会触发） -->
   <locale xml:lang="zh">
     <terms>
       <term name="edition" form="short">版</term>
@@ -59,7 +59,7 @@
     </terms>
   </locale>
 
-  <!-- ============== 作者（带兜底） ============== -->
+  <!-- ================= 作者（带兜底） ================= -->
   <macro name="author">
     <names variable="author" delimiter=", " et-al-min="4" et-al-use-first="3">
       <name/>
@@ -93,28 +93,15 @@
     </names>
   </macro>
 
-  <!-- 作者后标点：按条目语言分流
-       - 英文：补 "."（使 et al. 只有一个点）
-       - 中文：补 "．"
-  -->
+  <!-- 作者后统一补 1 个英文句点：英文 et al. 永远只有一个点 -->
   <macro name="author-with-dot">
-    <choose>
-      <if locale="en">
-        <group>
-          <text macro="author"/>
-          <text value="."/>
-        </group>
-      </if>
-      <else>
-        <group>
-          <text macro="author"/>
-          <text value="．"/>
-        </group>
-      </else>
-    </choose>
+    <group>
+      <text macro="author"/>
+      <text value="."/>
+    </group>
   </macro>
 
-  <!-- ============== 类型与载体标识 ============== -->
+  <!-- ================= 类型与载体标识 ================= -->
   <macro name="type-id">
     <choose>
       <if type="article bill collection hearing legal_case legislation personal_communication regulation treaty" match="any">
@@ -177,7 +164,7 @@
     </choose>
   </macro>
 
-  <!-- ============== 题名 ============== -->
+  <!-- ================= 题名 ================= -->
   <macro name="volume">
     <choose>
       <if type="article article-journal article-magazine article-newspaper periodical" match="none">
@@ -252,7 +239,7 @@
     </group>
   </macro>
 
-  <!-- ============== 出处与出版项 ============== -->
+  <!-- ================= 日期与出处 ================= -->
   <macro name="issued-year">
     <choose>
       <if variable="issued">
@@ -377,7 +364,7 @@
     </choose>
   </macro>
 
-  <!-- ============== 科技成果奖（7项） ============== -->
+  <!-- ================= 科技成果奖（7项） ================= -->
   <macro name="award-year-month-cn">
     <date variable="issued">
       <date-part name="year" suffix="年"/>
@@ -397,7 +384,7 @@
     </group>
   </macro>
 
-  <!-- ============== 条目布局 ============== -->
+  <!-- ================= 条目布局 ================= -->
   <macro name="entry-layout">
     <choose>
 
@@ -413,7 +400,8 @@
                 <group>
                   <text macro="author-with-dot"/>
                   <text value=" "/>
-                  <text macro="title" suffix="．"/>
+                  <text macro="title" suffix="."/>
+                  <text value=" "/>
                   <text macro="publisher"/>
                   <text macro="access"/>
                 </group>
@@ -424,7 +412,8 @@
             <group>
               <text macro="author-with-dot"/>
               <text value=" "/>
-              <text macro="title" suffix="．"/>
+              <text macro="title" suffix="."/>
+              <text value=" "/>
               <text macro="publisher"/>
               <text macro="access"/>
             </group>
@@ -432,6 +421,7 @@
         </choose>
       </if>
 
+      <!-- 常规 -->
       <else>
         <choose>
 
@@ -440,7 +430,8 @@
             <group>
               <text macro="author-with-dot"/>
               <text value=" "/>
-              <text macro="title" suffix="．"/>
+              <text macro="title" suffix="."/>
+              <text value=" "/>
               <text macro="container-periodical"/>
             </group>
           </if>
@@ -450,7 +441,8 @@
             <group>
               <text macro="author-with-dot"/>
               <text value=" "/>
-              <text macro="title" suffix="．"/>
+              <text macro="title" suffix="."/>
+              <text value=" "/>
               <text macro="publisher"/>
             </group>
           </else-if>
@@ -460,38 +452,34 @@
             <group>
               <text macro="author-with-dot"/>
               <text value=" "/>
-              <text macro="title" suffix="．"/>
+              <text macro="title" suffix="."/>
+              <text value=" "/>
               <text macro="publisher"/>
               <text value=" "/>
               <text macro="access"/>
             </group>
           </else-if>
 
-          <!-- 论文集单篇论文 -->
+          <!-- 论文集单篇论文：题名[A]. 主编. 论文集名[C]. 出版项 -->
           <else-if type="paper-conference" variable="container-title" match="any">
             <group>
               <text macro="author-with-dot"/>
               <text value=" "/>
-              <text macro="title-A" suffix="．"/>
+              <text macro="title-A" suffix="."/>
               <text value=" "/>
               <choose>
                 <if variable="editor" match="any">
-                  <names variable="editor" delimiter=", " et-al-min="4" et-al-use-first="3">
+                  <!-- 关键：对 editor 强制用英文 locale（没语言时也输出 et al，不输出“等”） -->
+                  <names variable="editor" delimiter=", " et-al-min="4" et-al-use-first="3" locale="en">
                     <name/>
                     <et-al prefix=", "/>
                   </names>
-                  <choose>
-                    <if locale="en">
-                      <text value="."/>
-                    </if>
-                    <else>
-                      <text value="．"/>
-                    </else>
-                  </choose>
+                  <text value="."/>
                   <text value=" "/>
                 </if>
               </choose>
-              <text macro="container-title-C" suffix="．"/>
+              <text macro="container-title-C" suffix="."/>
+              <text value=" "/>
               <text macro="publisher"/>
             </group>
           </else-if>
@@ -501,7 +489,8 @@
             <group>
               <text macro="author-with-dot"/>
               <text value=" "/>
-              <text macro="title" suffix="．"/>
+              <text macro="title" suffix="."/>
+              <text value=" "/>
               <text macro="publisher"/>
               <text macro="access"/>
             </group>
@@ -513,7 +502,6 @@
     </choose>
   </macro>
 
-  <!-- 引文 -->
   <citation collapse="citation-number" after-collapse-delimiter=",">
     <sort>
       <key variable="citation-number"/>
@@ -523,8 +511,8 @@
     </layout>
   </citation>
 
-  <!-- 参考文献：不使用 second-field-align，避免自动 Tab -->
-  <bibliography entry-spacing="0" et-al-min="4" et-al-use-first="3" hanging-indent="true">
+  <!-- 参考文献：不使用 hanging-indent / second-field-align，避免强制悬挂与自动 Tab -->
+  <bibliography entry-spacing="0" et-al-min="4" et-al-use-first="3">
     <layout>
       <text variable="citation-number" prefix="[" suffix="]"/>
       <text value=" "/>
