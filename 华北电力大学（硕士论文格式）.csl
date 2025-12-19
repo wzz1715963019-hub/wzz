@@ -11,9 +11,9 @@
   default-locale="en">
 
   <info>
-    <title>华北电力大学（硕士论文格式）-v6（zh-CN修复，空语言默认英文）</title>
-    <id>https://zotero-chinese.com/styles/华北电力大学（硕士论文格式）-v6</id>
-    <link href="https://zotero-chinese.com/styles/华北电力大学（硕士论文格式）-v6" rel="self"/>
+    <title>华北电力大学（硕士论文格式）-v7（悬挂缩进，无Tab，zh-CN等）</title>
+    <id>https://zotero-chinese.com/styles/华北电力大学（硕士论文格式）-v7</id>
+    <link href="https://zotero-chinese.com/styles/华北电力大学（硕士论文格式）-v7" rel="self"/>
     <link href="https://zotero-chinese.com/styles/GB-T-7714—2015（顺序编码，双语，姓名不大写，无URL、DOI）" rel="template"/>
     <author>
       <name>Zeping Lee</name>
@@ -21,14 +21,14 @@
     </author>
     <category citation-format="numeric"/>
     <category field="generic-base"/>
-    <summary>修复：Language=zh-CN 条目输出“等”（不再 et al）；无语言字段默认英文(et al.)；论文集单篇题名[A]+论文集名[C]；paper-conference 的 editor 强制英文 et al；不使用 CSL 悬挂缩进/不插制表符。</summary>
+    <summary>v7：开启 bibliography 悬挂缩进(hanging-indent=true)；不使用 second-field-align，保证无Tab；修复 zh-CN 条目输出“等”；无语言默认英文(et al.)；论文集单篇[A]+论文集名[C]；paper-conference editor 强制英文 et al。</summary>
     <updated>2025-12-19T23:59:59+08:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">
       This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License
     </rights>
   </info>
 
-  <!-- ✅ 关键：同时提供 zh-CN（Zotero 常用）与 zh（兜底） -->
+  <!-- ✅ 关键：zh-CN + zh 都设 et-al=等 -->
   <locale xml:lang="zh-CN">
     <terms>
       <term name="edition" form="short">版</term>
@@ -51,7 +51,6 @@
     </terms>
   </locale>
 
-  <!-- 英文：et-al = et al（不带点；点由 author-with-dot 统一补 1 个，避免 et al..） -->
   <locale xml:lang="en">
     <terms>
       <term name="et-al">et al</term>
@@ -525,8 +524,8 @@
     </layout>
   </citation>
 
-  <!-- 参考文献：不使用 hanging-indent / second-field-align，避免强制悬挂与自动 Tab -->
-  <bibliography entry-spacing="0" et-al-min="4" et-al-use-first="3">
+  <!-- ✅ 悬挂缩进（悬浮）开启；❌ 不使用 second-field-align，保证不插Tab -->
+  <bibliography entry-spacing="0" et-al-min="4" et-al-use-first="3" hanging-indent="true">
     <layout>
       <text variable="citation-number" prefix="[" suffix="]"/>
       <text value=" "/>
