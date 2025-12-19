@@ -43,7 +43,7 @@
     </terms>
   </locale>
 
-  <!-- 主要责任者：<=3全列；>3前三+等 -->
+  <!-- 作者：<=3全列；>3前三+等 -->
   <macro name="author">
     <names variable="author" delimiter="，" et-al-min="4" et-al-use-first="3">
       <name/>
@@ -90,7 +90,7 @@
     </group>
   </macro>
 
-  <!-- 论文集单篇题名：强制 [A]（满足：题名后[A]） -->
+  <!-- 论文集单篇题名：强制 [A] -->
   <macro name="title-A">
     <group delimiter=": ">
       <text variable="title"/>
@@ -108,7 +108,7 @@
     </group>
   </macro>
 
-  <!-- 书籍卷号 -->
+  <!-- 卷号 -->
   <macro name="volume">
     <choose>
       <if type="article article-journal article-magazine article-newspaper periodical" match="none">
@@ -191,7 +191,7 @@
     </choose>
   </macro>
 
-  <!-- 其他责任者 -->
+  <!-- 译者 -->
   <macro name="secondary-contributors">
     <names variable="translator" delimiter="，" et-al-min="4" et-al-use-first="3">
       <name/>
@@ -212,7 +212,7 @@
     </names>
   </macro>
 
-  <!-- 论文集名[C]（满足：论文集名[C]） -->
+  <!-- 论文集名[C] -->
   <macro name="container-proceedings-title">
     <text variable="container-title"/>
     <group prefix="[" suffix="]">
@@ -354,7 +354,7 @@
     </choose>
   </macro>
 
-  <!-- URL -->
+  <!-- URL + [检索日期] -->
   <macro name="access">
     <choose>
       <if type="dataset post post-weblog software webpage" match="any">
@@ -364,11 +364,14 @@
     </choose>
   </macro>
 
-  <!-- 科技成果奖：用 report + 字段组合“严格识别”，并按7项输出且不加类型标识
-       字段建议（Zotero里填写）：
-       title=项目名称；publisher=颁奖单位；genre=获奖类别；edition=奖励等级；
-       number=获奖者排名；issued=获奖年月；call-number=证书号
-  -->
+  <!-- 科技成果奖：用 report + 7项字段齐全来识别；按7项输出且不加类型标识 -->
+  <macro name="award-date">
+    <date variable="issued">
+      <date-part name="year"/>
+      <date-part name="month" prefix="-" form="numeric-leading-zeros"/>
+    </date>
+  </macro>
+
   <macro name="award-layout">
     <group delimiter="． ">
       <text variable="title"/>
@@ -378,19 +381,28 @@
       <text variable="number"/>
       <choose>
         <if variable="issued">
-          <date variable="issued" form="numeric" date-parts="year-month"/>
+          <text macro="award-date"/>
         </if>
       </choose>
       <text variable="call-number"/>
     </group>
   </macro>
 
+  <!-- 连续出版物的年卷期 -->
+  <macro name="year-volume-issue">
+    <group delimiter="， ">
+      <text macro="issued-year"/>
+      <text variable="volume"/>
+    </group>
+    <text variable="issue" prefix="(" suffix=")"/>
+  </macro>
+
   <!-- 参考文献表格式 -->
   <macro name="entry-layout">
     <group delimiter="． ">
-      <choose>
 
-        <!-- 科技成果奖分支：必须是 report 且7项字段齐全才触发 -->
+      <choose>
+        <!-- 科技成果奖：必须是 report 且7项字段齐全才触发 -->
         <if type="report" variable="title publisher genre edition number call-number issued" match="all">
           <text macro="award-layout"/>
         </if>
@@ -419,7 +431,7 @@
               <text macro="publisher"/>
             </else-if>
 
-            <!-- 论文集单篇：题名[A].主编．论文集名[C]．出版地：出版社, 出版年：起止页码（无“//”） -->
+            <!-- 论文集单篇：题名[A].主编．论文集名[C]．出版项（无“//”） -->
             <else-if type="paper-conference" variable="container-title" match="any">
               <text macro="title-A" suffix="."/>
               <text macro="container-contributors" suffix="．"/>
@@ -452,18 +464,9 @@
           </choose>
           <text macro="access"/>
         </else>
-
       </choose>
-    </group>
-  </macro>
 
-  <!-- 连续出版物的年卷期（保持你原模板） -->
-  <macro name="year-volume-issue">
-    <group delimiter="， ">
-      <text macro="issued-year"/>
-      <text variable="volume"/>
     </group>
-    <text variable="issue" prefix="(" suffix=")"/>
   </macro>
 
   <!-- 正文引文：全角［］上标 -->
