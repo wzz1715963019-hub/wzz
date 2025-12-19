@@ -11,9 +11,9 @@
   default-locale="en">
 
   <info>
-    <title>华北电力大学（硕士论文格式）-v5（无语言默认英文）</title>
-    <id>https://zotero-chinese.com/styles/华北电力大学（硕士论文格式）-v5</id>
-    <link href="https://zotero-chinese.com/styles/华北电力大学（硕士论文格式）-v5" rel="self"/>
+    <title>华北电力大学（硕士论文格式）-v6（zh-CN修复，空语言默认英文）</title>
+    <id>https://zotero-chinese.com/styles/华北电力大学（硕士论文格式）-v6</id>
+    <link href="https://zotero-chinese.com/styles/华北电力大学（硕士论文格式）-v6" rel="self"/>
     <link href="https://zotero-chinese.com/styles/GB-T-7714—2015（顺序编码，双语，姓名不大写，无URL、DOI）" rel="template"/>
     <author>
       <name>Zeping Lee</name>
@@ -21,14 +21,25 @@
     </author>
     <category citation-format="numeric"/>
     <category field="generic-base"/>
-    <summary>华北电力大学硕士论文参考文献：无语言字段默认按英文处理(et al.)；仅 Language=zh 输出“等”；论文集单篇题名[A] + 论文集名[C]；科技成果奖7项；不使用制表符与 CSL 悬挂缩进。</summary>
+    <summary>修复：Language=zh-CN 条目输出“等”（不再 et al）；无语言字段默认英文(et al.)；论文集单篇题名[A]+论文集名[C]；paper-conference 的 editor 强制英文 et al；不使用 CSL 悬挂缩进/不插制表符。</summary>
     <updated>2025-12-19T23:59:59+08:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">
       This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License
     </rights>
   </info>
 
-  <!-- 中文：et-al = 等（仅当条目 Language=zh/zh-CN 时才会触发） -->
+  <!-- ✅ 关键：同时提供 zh-CN（Zotero 常用）与 zh（兜底） -->
+  <locale xml:lang="zh-CN">
+    <terms>
+      <term name="edition" form="short">版</term>
+      <term name="open-quote">“</term>
+      <term name="close-quote">”</term>
+      <term name="open-inner-quote">‘</term>
+      <term name="close-inner-quote">’</term>
+      <term name="et-al">等</term>
+    </terms>
+  </locale>
+
   <locale xml:lang="zh">
     <terms>
       <term name="edition" form="short">版</term>
@@ -77,28 +88,32 @@
           <name/>
           <et-al prefix=", "/>
         </names>
-        <names variable="composer" delimiter=", " et-al-min="4" et-al-use-first="3">
-          <name/>
-          <et-al prefix=", "/>
-        </names>
-        <names variable="illustrator" delimiter=", " et-al-min="4" et-al-use-first="3">
-          <name/>
-          <et-al prefix=", "/>
-        </names>
-        <names variable="director" delimiter=", " et-al-min="4" et-al-use-first="3">
-          <name/>
-          <et-al prefix=", "/>
-        </names>
       </substitute>
     </names>
   </macro>
 
-  <!-- 作者后统一补 1 个英文句点：英文 et al. 永远只有一个点 -->
+  <!-- 作者后标点：中文条目用“．”，其他用“.” -->
   <macro name="author-with-dot">
-    <group>
-      <text macro="author"/>
-      <text value="."/>
-    </group>
+    <choose>
+      <if locale="zh-CN">
+        <group>
+          <text macro="author"/>
+          <text value="．"/>
+        </group>
+      </if>
+      <else-if locale="zh">
+        <group>
+          <text macro="author"/>
+          <text value="．"/>
+        </group>
+      </else-if>
+      <else>
+        <group>
+          <text macro="author"/>
+          <text value="."/>
+        </group>
+      </else>
+    </choose>
   </macro>
 
   <!-- ================= 类型与载体标识 ================= -->
@@ -421,7 +436,6 @@
         </choose>
       </if>
 
-      <!-- 常规 -->
       <else>
         <choose>
 
@@ -469,7 +483,7 @@
               <text value=" "/>
               <choose>
                 <if variable="editor" match="any">
-                  <!-- 关键：对 editor 强制用英文 locale（没语言时也输出 et al，不输出“等”） -->
+                  <!-- editor 强制英文 et al（防止未设语言时出现“等”） -->
                   <names variable="editor" delimiter=", " et-al-min="4" et-al-use-first="3" locale="en">
                     <name/>
                     <et-al prefix=", "/>
